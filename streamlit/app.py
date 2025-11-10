@@ -6,6 +6,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
+import os
 from xgboost import XGBClassifier
 
 # =====================================================
@@ -23,16 +24,22 @@ Dashboard prediksi kebutuhan **Site Visit** berdasarkan data order pelanggan.
 # =====================================================
 @st.cache_resource
 def load_assets():
+    base_path = os.path.dirname(__file__)
+
     try:
-        model = joblib.load("XGboost_sitevisit.pkl")
+        model_path = os.path.join(base_path, "XGboost_sitevisit.pkl")
+        model = joblib.load(model_path)
     except Exception as e:
         st.error(f"Gagal memuat model: {e}")
+        st.write("Isi direktori saat ini:", os.listdir(base_path))
         st.stop()
 
     try:
-        encoders = joblib.load("encoder.pkl")
+        enc_path = os.path.join(base_path, "encoder.pkl")
+        encoders = joblib.load(enc_path)
     except Exception as e:
         st.error(f"Gagal memuat encoder: {e}")
+        st.write("Isi direktori saat ini:", os.listdir(base_path))
         st.stop()
 
     return model, encoders
